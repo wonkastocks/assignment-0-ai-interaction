@@ -20,10 +20,7 @@ If asked about non-food topics, respond with: "I can only help with food and rec
 """
 
 # Main function to get and process user input
-def get_recipe():
-    # Get user input for the dish
-    dish = input("What food dish would you like to prepare? ")
-    
+def get_recipe(dish):
     # Prepare the chat messages
     messages = [
         {"role": "system", "content": system_message},
@@ -62,5 +59,5 @@ if __name__ == "__main__":
         dish = input("What food dish would you like to prepare? ")
     
     # Run the recipe generator once
-    get_recipe()
+    get_recipe(dish)
     print("\nThank you for using the Food Recipe Assistant!")
