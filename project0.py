@@ -38,28 +38,8 @@ def check_package():
 
 def validate_dish_name(dish):
     """
-    Validate that the dish name contains only letters and hyphens,
-    with hyphens only allowed as part of words.
-    Also checks if the dish name appears to be a real food item using a more comprehensive approach.
-    
-    Returns True if the dish name is valid and appears to be a real food item, False otherwise.
-    
-    Validation Rules:
-    1. Format Validation:
-       - Only letters and hyphens (-) are allowed
-       - No numbers, special characters, or punctuation
-       - Hyphens must be part of a word (e.g., 'chicken-fried-rice' is okay)
-       - No spaces at the beginning or end
-    
-    2. Food Item Recognition:
-       - Checks against a comprehensive list of known food items
-       - Handles common typos (e.g., "kali" for "kale")
-       - Recognizes both single ingredients and complete dishes
-       - Validates compound food items with hyphens
-    
-    3. Non-Edible Item Detection:
-       - Detects and rejects non-food items (e.g., cars, computers, animals)
-       - Provides specific error messages for non-edible items
+    Validate that the dish name is a valid food item.
+    Returns True if valid, False otherwise.
        - Lists examples of non-edible categories
     """
     # Remove spaces at the beginning and end
