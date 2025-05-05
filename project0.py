@@ -48,20 +48,19 @@ def get_recipe():
         print("Please try again with a different dish.")
 
 # Main program loop
-print("Welcome to the Food Recipe Assistant!")
-print("-" * 50)
-print("I can help you find recipes for any food dish.")
-print("Just type the name of the dish you'd like to prepare.\n")
+if __name__ == "__main__":
+    print("Welcome to the Food Recipe Assistant!")
+    print("-" * 50)
+    print("I can help you find recipes for any food dish.")
+    print("Just type the name of the dish you'd like to prepare.\n")
 
-# Run the recipe generator
-get_recipe()
-
-# Keep the program running until user exits
-while True:
-    print("\nWould you like to find another recipe?")
-    choice = input("Type 'yes' to continue or 'no' to exit: ").lower()
-    if choice == 'yes':
-        get_recipe()
+    # Get dish name from command line argument or user input
+    import sys
+    if len(sys.argv) > 1:
+        dish = sys.argv[1]
     else:
-        print("\nThank you for using the Food Recipe Assistant!")
-        break
+        dish = input("What food dish would you like to prepare? ")
+    
+    # Run the recipe generator once
+    get_recipe()
+    print("\nThank you for using the Food Recipe Assistant!")
