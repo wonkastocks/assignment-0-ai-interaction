@@ -224,6 +224,16 @@ def main():
     print("I can help you find recipes for any food dish.")
     print("Just type the name of the dish you'd like to prepare.")
 
+    # Initialize the OpenAI client to connect to Ollama's local endpoint
+    openai = check_package()
+    client = openai.OpenAI(
+        base_url="http://localhost:11434/v1",
+        api_key="ollama"
+    )
+    
+    # Configure the model
+    model = "llama2-uncensored:latest"  # Using Llama2 uncensored model for recipe generation
+    
     # Get valid dish name from command line argument or user input
     dish = None
     if len(sys.argv) > 1:
