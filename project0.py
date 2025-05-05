@@ -43,6 +43,24 @@ def validate_dish_name(dish):
     Also checks if the dish name appears to be a real food item using a more comprehensive approach.
     
     Returns True if the dish name is valid and appears to be a real food item, False otherwise.
+    
+    Validation Rules:
+    1. Format Validation:
+       - Only letters and hyphens (-) are allowed
+       - No numbers, special characters, or punctuation
+       - Hyphens must be part of a word (e.g., 'chicken-fried-rice' is okay)
+       - No spaces at the beginning or end
+    
+    2. Food Item Recognition:
+       - Checks against a comprehensive list of known food items
+       - Handles common typos (e.g., "kali" for "kale")
+       - Recognizes both single ingredients and complete dishes
+       - Validates compound food items with hyphens
+    
+    3. Non-Edible Item Detection:
+       - Detects and rejects non-food items (e.g., cars, computers, animals)
+       - Provides specific error messages for non-edible items
+       - Lists examples of non-edible categories
     """
     # Remove spaces at the beginning and end
     dish = dish.strip()
@@ -90,24 +108,85 @@ def validate_dish_name(dish):
     if any(word in common_food_words for word in dish_words):
         return True
     
-    # If not a common food word, check if it's a single word that could be a food item
-    if len(dish_words) == 1:
-        # Check if it's a single word that could be a food item
-        # This list can be expanded as needed
-        single_word_foods = set("""
-        kale spinach broccoli carrots tomatoes cucumbers lettuce zucchini
-        bell-peppers onions garlic ginger lemon lime orange apple banana
-        strawberry blueberry raspberry blackberry peach plum apricot
-        coconut almonds walnuts cashews peanuts pistachios
-        yogurt cheese butter milk cream eggs
-        """.split())
-        if dish.lower() in single_word_foods:
-            return True
+    # Check for common typos in food words
+    typo_corrections = {
+        'kali': 'kale',
+        'kalee': 'kale',
+        'kalea': 'kale',
+        'spinnach': 'spinach',
+        'spinnage': 'spinach',
+        'spinech': 'spinach',
+        'broccli': 'broccoli',
+        'broccoli': 'broccoli',
+        'carots': 'carrots',
+        'carrotts': 'carrots',
+        'tomatos': 'tomatoes',
+        'tomatoes': 'tomatoes',
+        'cucumbers': 'cucumbers',
+        'lettuse': 'lettuce',
+        'lettus': 'lettuce',
+        'zuchini': 'zucchini',
+        'zucchini': 'zucchini',
+        'peppers': 'peppers',
+        'garlic': 'garlic',
+        'ginger': 'ginger',
+        'lemon': 'lemon',
+        'lime': 'lime',
+        'orange': 'orange',
+        'apple': 'apple',
+        'banana': 'banana',
+        'strawberry': 'strawberry',
+        'blueberry': 'blueberry',
+        'raspberry': 'raspberry',
+        'blackberry': 'blackberry',
+        'peach': 'peach',
+        'plum': 'plum',
+        'apricot': 'apricot',
+        'coconut': 'coconut',
+        'almonds': 'almonds',
+        'walnuts': 'walnuts',
+        'cashews': 'cashews',
+        'peanuts': 'peanuts',
+        'pistachios': 'pistachios',
+        'yogurt': 'yogurt',
+        'cheese': 'cheese',
+        'butter': 'butter',
+        'milk': 'milk',
+        'cream': 'cream',
+        'eggs': 'eggs'
+    }
     
-    # If it's not a common food word and not a single word food item,
+    # Check if the input is a typo of a known food item
+    if dish.lower() in typo_corrections:
+        return True
+    
+    # Check if it's a non-edible item
+    non_edible_items = set("""
+    car cars automobile automobile parts engine transmission
+    battery tires wheels brakes suspension steering
+    computer laptop desktop monitor keyboard mouse
+    phone mobile smartphone tablet camera television
+    furniture chair table couch bed dresser wardrobe
+    clothing shirt pants jeans jacket dress shoes
+    tools hammer drill screwdriver saw wrench pliers
+    animals dog cat bird fish reptile insect
+    plants tree flower grass bush cactus
+    electronics circuit board motherboard processor
+    chemicals acid base poison toxic hazardous
+    machinery engine motor generator compressor
+    building house apartment building structure
+    vehicle motorcycle truck bus train plane
+    """.split())
+    
+    # If it contains any non-edible words, reject it
+    if any(word in non_edible_items for word in dish_words):
+        print(f"\nError: {dish} is not an edible food item.")
+        print("Examples of non-edible items include: cars, computers, animals, and chemicals.")
+        print("Please enter a real food item name.")
+        return False
+    
+    # If it's not a common food word and not a non-edible item,
     # let the AI decide if it's a valid food item
-    return True
-    
     return True
 
 def setup_environment():
