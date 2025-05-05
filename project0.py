@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from openai import OpenAI
 
 def setup_environment():
     """Set up virtual environment and install dependencies."""
@@ -48,8 +49,8 @@ def main():
     
     # Initialize the OpenAI client to connect to Ollama's local endpoint
     client = OpenAI(
-        base_url="http://localhost:11434/v1",   # Ollama's default API endpoint
-        api_key="ollama"                        # Placeholder value
+        base_url="http://localhost:11434/v1",
+        api_key="ollama"
     )
 
     # Configure the model
