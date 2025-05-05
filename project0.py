@@ -99,6 +99,7 @@ def validate_dish_name(dish):
     strawberry blueberry raspberry blackberry peach plum apricot
     coconut almonds walnuts cashews peanuts pistachios
     yogurt cheese butter milk cream eggs
+    hot-dog hot-dogs
     """.split())
     
     # Convert dish to lowercase and split into words
