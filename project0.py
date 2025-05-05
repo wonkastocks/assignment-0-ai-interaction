@@ -11,7 +11,7 @@ client = OpenAI(
 )
 
 # Configure the model
-model = "llava:latest"  # Using LLAVA model for recipe generation
+model = "llama2-uncensored:latest"  # Using Llama2 uncensored model for recipe generation
 
 # Define system message to focus on food-related queries
 system_message = """
