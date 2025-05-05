@@ -222,44 +222,29 @@ def main():
     print("\nWelcome to the Food Recipe Assistant!")
     print("-" * 50)
     print("I can help you find recipes for any food dish.")
-    print("Just type the name of the dish you'd like to prepare.\n")
+    print("Just type the name of the dish you'd like to prepare.")
 
     # Get valid dish name from command line argument or user input
     dish = None
     if len(sys.argv) > 1:
         dish = sys.argv[1]
         if not validate_dish_name(dish):
-            print(f"\nInvalid dish name '{dish}'. Please run the script with a valid dish name.")
+            print(f"\nError: '{dish}' is not recognized as a food item.")
             print("Examples: pizza, chicken-salad, spaghetti-bolognese")
             return
     else:
         while dish is None:
             dish = input("What food dish would you like to prepare? ").strip()
             if not validate_dish_name(dish):
-                print("\nInvalid dish name. Please enter a real food item.")
+                print(f"\nError: '{dish}' is not recognized as a food item.")
                 print("Examples: pizza, chicken-salad, spaghetti-bolognese")
-                print("\nRules:")
-                print("1. Only letters and hyphens (-) are allowed")
-                print("2. No numbers, special characters, or punctuation")
-                print("3. Hyphens must be part of a word (e.g., 'chicken-fried-rice' is okay)")
-                print("4. No spaces at the beginning or end")
-                print("\nPlease try again with a valid dish name.")
+                print("\nPlease enter a real food item name.")
                 dish = None
                 continue
-
-    # Initialize the OpenAI client to connect to Ollama's local endpoint
-    openai = check_package()
-    client = openai.OpenAI(
-        base_url="http://localhost:11434/v1",
-        api_key="ollama"
-    )
-    
-    # Configure the model
-    model = "llama2-uncensored:latest"  # Using Llama2 uncensored model for recipe generation
-
-    # Prepare the chat messages with strict system prompt
-    messages = [
-        {"role": "system", "content": """
+            
+            # Prepare the chat messages with strict system prompt
+            messages = [
+                {"role": "system", "content": """
 You are a food recipe assistant. You ONLY respond to questions about edible food items that humans can safely consume.
 
 RULES:
@@ -276,32 +261,37 @@ If asked about ANY non-food item or non-existent food item, respond ONLY with:
 
 You MUST follow these rules exactly as written. Do not deviate or generate recipes for any non-food items or non-existent food items.
 """},
-        {"role": "user", "content": f"Show me the ingredients, recipe and preparation method for {dish}. Organize the answer in clear, concise bullet points."}
-    ]
+                {"role": "user", "content": f"Show me the ingredients, recipe and preparation method for {dish}. Organize the answer in clear, concise bullet points."}
+            ]
 
-    # Send the chat completion request and validate the response
-    try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0,
-        )
-        
-        # Get the response content
-        response_content = response.choices[0].message.content
-        
-        # Check if the response indicates an invalid food item
-        if "I'm sorry" in response_content.lower() or "not a food item" in response_content.lower():
-            print("\nInvalid food item. Please enter a real food item name.")
-            print("Examples: pizza, chicken-salad, spaghetti-bolognese")
-            return
-            
-        print("\nRecipe Results:")
-        print("-" * 50)
-        print(response_content)
-    except Exception as e:
-        print(f"\nError generating recipe: {str(e)}")
-        print("Please try again with a different dish.")
+            # Send the chat completion request and handle responses
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                    temperature=0,
+                )
+                
+                # Get the response content
+                response_content = response.choices[0].message.content.lower()
+                
+                # Check if the AI response indicates an invalid food item
+                if "i'm sorry" in response_content or "not a food item" in response_content:
+                    print("\nError: The AI does not recognize this as a valid food item.")
+                    print("Please enter a different food item.")
+                    dish = None
+                    continue
+                
+                # If the AI accepts it as a valid food item, show the recipe
+                print("\nRecipe Results:")
+                print("-" * 50)
+                print(response.choices[0].message.content)
+                break  # Exit the loop since we got a valid recipe
+            except Exception as e:
+                print(f"\nError generating recipe: {str(e)}")
+                print("Please try again with a different dish.")
+                dish = None
+                continue
     
     print("\nThank you for using the Food Recipe Assistant!")
 
